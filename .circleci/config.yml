@@ -21,12 +21,25 @@ jobs:
       # Use mvn clean and package as the standard maven build phase
       - run:
           name: Build
-          command: mvn -B -DskipTests clean package
+          command: mvn dependency:go-offline # gets the project dependencies
+
+      - run:
+          name: Install
+          command: mvn clean install
       # Then run your tests!
       - run:
           name: Test
           command: mvn test
+          
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+          path: test-output/testng-results.xml
 
+      - run:
+          name: Get API token
+          command: |
+            echo export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$client_id\",\"client_secret\": \"$client_secret\" }" https://xray.cloud.xpand-it.com/api/v1/authenticate| tr -d '"') >> $BASH_ENV
+            source $BASH_ENV
+      - run : curl -H "Content-Type:text/xml" -X POST -H "Authorization:Bearer $token"  --data @test-output/testng-results.xml https://xray.cloud.getxray.app/api/v1/import/execution/testng?projectKey=XRAYR 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
