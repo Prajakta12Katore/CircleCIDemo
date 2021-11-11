@@ -16,7 +16,7 @@ public class Quantity
 	@FindBy(xpath="//*[@id=\"amount7\"]")
 	WebElement e5;
 	
-	@FindBy(xpath="/html/body/div[1]/div[1]/div[1]/div[5]/div/div/div[2]/div/div/div[3]/div[3]/form[2]/div[2]/div/div[3]/button")
+	@FindBy(xpath="/html/body/div[1]/div[1]/div[1]/div[3]/div/div/div[2]/div/div/div[3]/div[3]/form[2]/div[2]/div/div[3]/button/span")
 	WebElement e6;
 	
 	public Quantity(WebDriver driver)
